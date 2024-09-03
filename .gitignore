@@ -1,0 +1,52 @@
+credentials/
+
+# Ambiente Virtual
+venv/
+env/
+.venv/
+.env/
+
+# Arquivos de configuração de ambiente
+.env
+.env.local
+.env.*.local
+
+# Arquivos de dependências
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+*.swo
+*.DS_Store
+*.egg
+*.egg-info/
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+*.pid
+
+# Arquivos de banco de dados local
+*.sqlite3
+
+# Caches
+.cache/
+*.coverage
+
+# Arquivos gerados por IDEs
+.vscode/
+.idea/
+*.iml
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de configuração do Git
+.git/
