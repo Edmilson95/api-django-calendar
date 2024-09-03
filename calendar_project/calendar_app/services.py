@@ -57,3 +57,31 @@ def create_google_calendar_event(summary, start_time, end_time, email):
     }     
     return service.events().insert(calendarId='primary', body=event).execute()
           
+def update_google_calendar_event(event_id, event_data):
+    try:
+        creds = get_credentials()
+        service = build("calendar", "v3", credentials=creds)
+
+        event = service.events().get(calendarId='primary', eventId=event_id).execute()
+
+        # atualiza apenas os campos fornecidos
+        if 'summary' in event_data:
+            event['summary'] = event_data['summary']
+        if 'email' in event_data:
+            event['attendees'] = [{'email': event_data['email']}]
+        if 'start_time' in event_data:
+            event['start'] = {
+                'dateTime': event_data['start_time'],
+                'timeZone': 'America/Sao_Paulo',
+            }
+        if 'end_time' in event_data:
+            event['end'] = {
+                'dateTime': event_data['end_time'],
+                'timeZone': 'America/Sao_Paulo',
+            }
+
+        updated_event = service.events().update(calendarId='primary', eventId=event_id, body=event).execute()
+        return updated_event
+
+    except HttpError as error:
+        raise Exception(f'Ocorreu um erro ao atualizar o evento: {error}')            
