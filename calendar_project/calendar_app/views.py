@@ -1,16 +1,78 @@
 from django.shortcuts import render
-
-# Create your views here.
-
-
+import datetime
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .services import (
+    list_google_calendar_events,
+    get_google_calendar_events,
     create_google_calendar_event,
     update_google_calendar_event,
 )
 from googleapiclient.errors import HttpError
+
+def list_events(request):
+    if request.method == 'GET':
+        try:
+            event_id = request.GET.get('id')
+            title = request.GET.get('title')
+            start_date = request.GET.get('start_date')  # YYYY-MM-DD
+            end_date = request.GET.get('end_date')      # YYYY-MM-DD
+
+            if event_id:
+                # Busca por ID específico
+                event = get_google_calendar_events(event_id)
+                event_data = {
+                    'id': event.get('id'),
+                    'summary': event.get('summary'),
+                    'start': event['start'].get('dateTime', event['start'].get('date')),
+                    'end': event['end'].get('dateTime', event['end'].get('date')),
+                    'attendees': event.get('attendees', [])
+                }
+                return JsonResponse({'event': event_data}, status=200)
+            
+            # se n for passado parametro, retorns os 10 prox eventos
+            if not start_date and not end_date and not title:
+                now = datetime.datetime.now().isoformat() + 'Z'
+                events_result = list_google_calendar_events(time_min=now, max_results=10)
+
+                events_data = []
+                for event in events_result:
+                    event_info = {
+                        'id': event.get('id'),
+                        'summary': event.get('summary'),
+                        'start': event['start'].get('dateTime', event['start'].get('date')),
+                        'end': event['end'].get('dateTime', event['end'].get('date')),
+                        'attendees': event.get('attendees', [])
+                    }
+                    events_data.append(event_info)
+                return JsonResponse({'events': events_data}, status=200)    
+
+            # Busca por período de datas e título
+            time_min = f"{start_date}T00:00:00Z" if start_date else None
+            time_max = f"{end_date}T23:59:59Z" if end_date else None
+
+            events = list_google_calendar_events(time_min=time_min, time_max=time_max, title=title)
+            
+            events_data = []
+            for event in events:
+                event_info = {
+                    'id': event.get('id'),
+                    'summary': event.get('summary'),
+                    'start': event['start'].get('dateTime', event['start'].get('date')),
+                    'end': event['end'].get('dateTime', event['end'].get('date')),
+                    'attendees': event.get('attendees', [])
+                }
+                events_data.append(event_info)
+            
+            return JsonResponse({'events': events_data}, status=200)
+        
+        except HttpError as error:
+            return JsonResponse({'error': f'Ocorreu um erro: {error}'}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Método inválido'}, status=400)      
 
 @csrf_exempt
 def create_event(request):

@@ -5,6 +5,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import datetime
 
 # Necessário para acessar o Google Calendar
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -31,6 +32,42 @@ def get_credentials():
         with open(TOKEN_PATH, 'w') as token:
             token.write(creds.to_json())       
     return creds  
+
+def get_google_calendar_events(event_id): # busca evento pelo id
+    try:
+        creds = get_credentials()
+        service = build("calendar", "v3", credentials=creds)
+        
+        event = service.events().get(calendarId='primary', eventId=event_id).execute()
+        return event  
+    except HttpError as error:
+        raise Exception(f'Ocorreu um erro ao recuperar o(s) evento(s): {error}')
+
+def list_google_calendar_events(time_min=None, time_max=None, title=None, max_results=None): #lista com base em critérios
+    try:
+        creds = get_credentials()
+        service = build('calendar', 'v3', credentials=creds)
+
+        params = {
+            'calendarId': 'primary',
+            'singleEvents': True,
+            'orderBy': 'startTime',
+        }
+
+        if time_min:
+            params['timeMin'] = time_min
+        if time_max:
+            params['timeMax'] = time_max
+        if title:
+            params['q'] = title
+
+        events_result = service.events().list(**params).execute()
+        events = events_result.get('items', []) 
+        return events
+
+    except HttpError as error:
+        raise Exception(f'Ocorreu um erro ao listar os eventos: {error}')       
+
 
 def create_google_calendar_event(summary, start_time, end_time, email):
     creds = get_credentials()
