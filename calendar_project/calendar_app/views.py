@@ -144,7 +144,7 @@ def delete_event(request):
         
         try:
             delete_google_calendar_event(event_id)
-            return JsonResponse({'message': 'Evento deletado com sucesso!'}, status=200)
+            return JsonResponse({'message': 'Evento deletado com sucesso!'}, status=204)
         
         except Exception as e:
             return JsonResponse({'error', str(e)}, status=500)
