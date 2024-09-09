@@ -1,5 +1,6 @@
 from django.shortcuts import render
-import datetime
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +13,8 @@ from .services import (
 )
 from googleapiclient.errors import HttpError
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_events(request):
     if request.method == 'GET':
         try:
@@ -72,7 +75,8 @@ def list_events(request):
     
     return JsonResponse({'error': 'Método inválido'}, status=400)      
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_event(request):
     """Cria um novo evento no Google Calendar."""
     if request.method == 'POST':
@@ -100,7 +104,8 @@ def create_event(request):
     
     return JsonResponse({'error': 'Método inválido'}, status=400)
 
-@csrf_exempt
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_event(request): #atualizar evento existente
     if request.method == 'PUT':
         data = json.loads(request.body)
@@ -127,7 +132,8 @@ def update_event(request): #atualizar evento existente
         
     return JsonResponse({'error': 'Método inválido'}, status=400)
 
-@csrf_exempt
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_event(request):
     if request.method == 'DELETE':
         data = json.loads(request.body)

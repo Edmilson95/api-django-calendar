@@ -17,7 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('calendar/login/', TokenObtainPairView.as_view()),
+    path('calendar/login/refresh/', TokenRefreshView.as_view()),
     path('calendar/', include('calendar_app.urls')),
 ]
