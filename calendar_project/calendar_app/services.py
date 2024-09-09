@@ -33,15 +33,16 @@ def get_credentials():
             token.write(creds.to_json())       
     return creds  
 
-def get_google_calendar_events(event_id): # busca evento pelo id
-    try:
+def get_google_calendar_events(event_id=None): # busca evento pelo id
         creds = get_credentials()
         service = build("calendar", "v3", credentials=creds)
         
-        event = service.events().get(calendarId='primary', eventId=event_id).execute()
-        return event  
-    except HttpError as error:
-        raise Exception(f'Ocorreu um erro ao recuperar o(s) evento(s): {error}')
+        if event_id:
+            return service.events().get(calendarId='primary', eventId=event_id).execute()
+        else:
+            now = datetime.datetime.now().isoformat() + 'Z'
+            return service.events().list(calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute().get('items', [])          
 
 def list_google_calendar_events(time_min=None, time_max=None, title=None, max_results=None): #lista com base em critérios
     try:

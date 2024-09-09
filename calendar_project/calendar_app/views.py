@@ -31,14 +31,11 @@ def list_events(request):
                     'attendees': event.get('attendees', [])
                 }
                 return JsonResponse({'event': event_data}, status=200)
-            
-            # se n for passado parametro, retorns os 10 prox eventos
-            if not start_date and not end_date and not title:
-                now = datetime.datetime.now().isoformat() + 'Z'
-                events_result = list_google_calendar_events(time_min=now, max_results=10)
 
+            if not event_id and not title and not start_date and not end_date:
+                events = get_google_calendar_events()
                 events_data = []
-                for event in events_result:
+                for event in events:
                     event_info = {
                         'id': event.get('id'),
                         'summary': event.get('summary'),
@@ -49,23 +46,23 @@ def list_events(request):
                     events_data.append(event_info)
                 return JsonResponse({'events': events_data}, status=200)    
 
+            if start_date or end_date or title:
             # Busca por período de datas e título
-            time_min = f"{start_date}T00:00:00Z" if start_date else None
-            time_max = f"{end_date}T23:59:59Z" if end_date else None
+                time_min = f"{start_date}T00:00:00Z" if start_date else None
+                time_max = f"{end_date}T23:59:59Z" if end_date else None
 
-            events = list_google_calendar_events(time_min=time_min, time_max=time_max, title=title)
+                events = list_google_calendar_events(time_min=time_min, time_max=time_max, title=title)
             
-            events_data = []
-            for event in events:
-                event_info = {
-                    'id': event.get('id'),
-                    'summary': event.get('summary'),
-                    'start': event['start'].get('dateTime', event['start'].get('date')),
-                    'end': event['end'].get('dateTime', event['end'].get('date')),
-                    'attendees': event.get('attendees', [])
-                }
-                events_data.append(event_info)
-            
+                events_data = []
+                for event in events:
+                    event_info = {
+                        'id': event.get('id'),
+                        'summary': event.get('summary'),
+                        'start': event['start'].get('dateTime', event['start'].get('date')),
+                        'end': event['end'].get('dateTime', event['end'].get('date')),
+                        'attendees': event.get('attendees', [])
+                    }
+                    events_data.append(event_info)
             return JsonResponse({'events': events_data}, status=200)
         
         except HttpError as error:
