@@ -121,4 +121,10 @@ def update_google_calendar_event(event_id, event_data):
         return updated_event
 
     except HttpError as error:
-        raise Exception(f'Ocorreu um erro ao atualizar o evento: {error}')            
+        raise Exception(f'Ocorreu um erro ao atualizar o evento: {error}')     
+
+def delete_google_calendar_event(event_id):
+    creds = get_credentials()
+    service = build('calendar', 'v3', credentials=creds)
+    
+    service.events().delete(calendarId='primary', eventId=event_id).execute()           
