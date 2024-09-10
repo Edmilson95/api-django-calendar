@@ -67,8 +67,7 @@ python manage.py migrate
 
 6️⃣ Executar o Projeto Localmente
 Com tudo configurado, agora você pode rodar o servidor local do Django:
-
-python manage.py runserver
+python manage.py runserver 
 
 Acesse o projeto em http://localhost:8000 🎉
 
@@ -83,7 +82,6 @@ GET /calendar/list_events/: Busca eventos com base em ID, período de datas, ou 
 
 🧪 Testando a Aplicação
 Para garantir que tudo está funcionando conforme o esperado, você pode rodar os testes automáticos que foram configurados:
-
 python manage.py test
 
 🛡️ Segurança
@@ -98,8 +96,5 @@ Django 4.2.7
 Google Calendar API
 Python 3.10
 Django REST Framework
-
-📄 Licença
-Este projeto está licenciado sob a MIT License.
 
 👨‍💻 Desenvolvido por Edmilson Ferreira
