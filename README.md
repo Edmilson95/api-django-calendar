@@ -74,22 +74,35 @@ Acesse o projeto em http://localhost:8000 🎉
 🔧 Funcionalidades Disponíveis
 Endpoints:
 POST /calendar/login/: Faz o login, retorna o token JWT.
+{
+	"username": "edmilsonferreira",
+	"password": 123456
+}
+
 POST /calendar/create_event/: Cria um novo evento no Google Calendar.
+{
+    "email": "edmilson.svic@gmail.com",
+    "summary": "fé que FOI",
+    "start_time": "2024-09-09T15:00:00",
+    "end_time": "2024-09-09T16:00:00"
+}
 POST /calendar/update_event/: Atualiza um evento existente.
-POST /calendar/delete_event/: Deleta um evento existente.
+{
+    "id": "rcprajjk2k87n1tmiu0ju4jhas",
+    "summary": "Ta feito, brode"
+}
+POST /calendar/delete_event/: Deleta um evento.
+{
+  "id": "rcprajjk2k87n1tmiu0ju4jhas"
+}
 GET /calendar/list_events/: Lista os 10 próximos eventos no seu Calendário.
+
 GET /calendar/list_events/: Busca eventos com base em ID, período de datas, ou título (parcial).
+exemplo de URL: /list_events/?title=WLCSOLUCOES&start_date=2024-09-12&end_date=2024-11-12
 
 🧪 Testando a Aplicação
 Para garantir que tudo está funcionando conforme o esperado, você pode rodar os testes automáticos que foram configurados:
 python manage.py test
-
-🛡️ Segurança
-Lembre-se de que credenciais e tokens sensíveis nunca devem ser expostos no repositório. Certifique-se de que os arquivos credentials.json e token.json estão listados no seu .gitignore.
-
-💡 Dicas Finais
-Se o token de autenticação expirar, você será solicitado a autorizar novamente o acesso ao Google Calendar pela janela do navegador.
-Certifique-se de que as variáveis de ambiente estejam configuradas corretamente ao rodar o projeto em ambientes de produção.
 
 💻 Tecnologias Utilizadas
 Django 4.2.7
