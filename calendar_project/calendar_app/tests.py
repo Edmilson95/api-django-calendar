@@ -4,6 +4,7 @@ import json
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import AccessToken
+import datetime
 
 # Create your tests here.
 
@@ -53,3 +54,23 @@ class CalendarEventTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('message', response.json())
         self.assertEqual(response.json()['message'], 'Evento atualizado com sucesso.')
+
+    def test_list_10events(self):
+        response = self.client.get(reverse('list_events'))
+        self.assertEqual(response.status_code, 200)
+        self.assertGreaterEqual(len(response.json()), 1)
+    
+    def test_list_by_id(self):
+        response = self.client.get(reverse('list_events') + f'?id={self.evento_id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get('event').get('id'), self.evento_id)
+
+    def test_list_by_title(self):
+        response = self.client.get(reverse('list_events') + f'?title=Teste') 
+        self.assertEqual(response.status_code, 200)
+        self.assertGreaterEqual(len(response.json()), 1)
+
+    def test_list_by_date(self):
+        dia_de_hoje = datetime.date.today()
+        response = self.client.get(reverse('list_events') + f'?start_date={dia_de_hoje}&end_date={dia_de_hoje}')
+        self.assertEqual(response.status_code, 200)   
