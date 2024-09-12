@@ -73,4 +73,8 @@ class CalendarEventTests(TestCase):
     def test_list_by_date(self):
         dia_de_hoje = datetime.date.today()
         response = self.client.get(reverse('list_events') + f'?start_date={dia_de_hoje}&end_date={dia_de_hoje}')
-        self.assertEqual(response.status_code, 200)   
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_event_by_id(self):
+        response = self.client.delete(reverse('delete_event'), {'id': self.evento_id}, format='json')
+        self.assertEqual(response.status_code, 204)       
