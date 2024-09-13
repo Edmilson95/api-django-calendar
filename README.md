@@ -27,8 +27,11 @@ Primeiro, você precisará clonar este repositório para o seu ambiente local:
 ```bash
 git clone https://github.com/Edmilson95/api-django-calendar.git
 cd api-django-calendar
+```
+```bash
 2️⃣ Criar e Ativar o Ambiente Virtual
 Agora, crie e ative um ambiente virtual para garantir que as dependências do projeto sejam isoladas:
+```
 
 # Criação do ambiente virtual
 python -m venv venv
