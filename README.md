@@ -1,14 +1,14 @@
-# 🌟 Google Calendar API Integration with Django 🌟
+#   Google Calendar API Integration with Django 
 
 Este projeto é uma aplicação Django que faz uma integração TOP com a API do Google Calendar, permitindo que você **crie, atualize, exclua e pesquise eventos** diretamente no seu calendário! 🚀
 
 ---
 
-## 🚀 Começando
+##  Começando
 
 Estas instruções te guiarão através do processo de configuração do projeto na sua máquina local, para que você possa rodá-lo e testar suas funcionalidades.
 
-### 📋 Pré-requisitos
+###  Pré-requisitos
 
 Certifique-se de ter as seguintes ferramentas instaladas no seu ambiente:
 
