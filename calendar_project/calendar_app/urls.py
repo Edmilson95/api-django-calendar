@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import list_events, create_event, update_event, delete_event
+from calendar_app.views import list_events, create_event, update_event, delete_event
 
 urlpatterns = [
     path('list_events/', list_events, name='list_events'),

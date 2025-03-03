@@ -12,6 +12,7 @@ from .services import (
     delete_google_calendar_event
 )
 from googleapiclient.errors import HttpError
+from .tasks import create_event_async
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -80,6 +81,7 @@ def list_events(request):
 def create_event(request):
     """Cria um novo evento no Google Calendar."""
     if request.method == 'POST':
+        print("create_event foi chamado")
         data = json.loads(request.body)
         email = data.get('email')
         summary = data.get('summary')
@@ -91,7 +93,10 @@ def create_event(request):
             return JsonResponse({'error': 'Todos os campos são obrigatórios.'}, status=400)
             
         # Criação do evento
-        try:
+        task = create_event_async.delay(data)
+        print(task)
+        return JsonResponse({'message': 'Evento enviado para processamento', 'task_id': task.id}, status=202)
+        '''try:
             event = create_google_calendar_event(summary, start_time, end_time, email)
             return JsonResponse({
                 'message': 'Evento criado com sucesso.',
@@ -101,7 +106,7 @@ def create_event(request):
         
         except HttpError as error:
             return JsonResponse({'error': f'Ocorreu um erro: {error}'}, status=500)
-    
+        '''
     return JsonResponse({'error': 'Método inválido'}, status=400)
 
 @api_view(['PUT'])
